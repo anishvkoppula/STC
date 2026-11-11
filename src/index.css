@@ -56,9 +56,8 @@ h2 em, h1 em, .dialog-title em { font-weight:400; }
 /* A quiet, fixed point above the landscape. */
 .site-header { position:sticky; top:0; z-index:30; background:rgba(247,245,237,.97); backdrop-filter:blur(16px); }
 .header-inner { display:flex; align-items:center; justify-content:space-between; height:94px; max-width:1440px; margin:auto; padding:0 42px; gap:40px; }
-.brand { display:flex; align-items:center; gap:10px; font-size:16px; line-height:1.05; font-weight:600; letter-spacing:-.7px; }
-.brand strong { font-weight:800; }
-.brand-icon { color:var(--orange); }
+.brand { display:inline-flex; align-items:center; flex-shrink:0; }
+.brand-logo { display:block; width:76px; height:auto; }
 .desktop-nav { display:flex; gap:34px; margin-left:55px; }
 .desktop-nav a { font-size:11px; font-weight:600; padding:15px 0; position:relative; }
 .desktop-nav a::after { content:''; position:absolute; left:0; bottom:7px; height:1px; width:0; background:var(--forest); transition:width .2s; }
@@ -231,8 +230,8 @@ h2 em, h1 em, .dialog-title em { font-weight:400; }
 .contact-links>a { display:flex; align-items:center; gap:20px; font-size:11px; font-weight:500; }
 .contact-links>a:hover { color:var(--orange); }
 .site-footer { display:flex; align-items:center; justify-content:space-between; gap:20px; padding:28px 42px; border-top:1px solid var(--line); }
-.footer-brand { display:flex; align-items:center; gap:8px; font-size:12px; font-weight:800; letter-spacing:-.4px; }
-.footer-brand svg { color:var(--orange); }
+.footer-brand { display:inline-flex; align-items:center; flex-shrink:0; }
+.footer-brand .brand-logo { width:88px; }
 .site-footer>p { font-size:9px; color:#596650; }
 .site-footer>span { font-size:8px; color:#596650; }
 .back-top { display:flex; align-items:center; gap:9px; font-size:7px; letter-spacing:.1em; }
@@ -243,6 +242,7 @@ h2 em, h1 em, .dialog-title em { font-weight:400; }
 .dialog-content { position:fixed; z-index:61; top:50%; left:50%; transform:translate(-50%,-50%); width:calc(100% - 32px); max-width:510px; max-height:calc(100dvh - 36px); overflow-y:auto; border-radius:15px; background:var(--cream); color:var(--forest); padding:33px 38px; box-shadow:0 30px 100px #0003; animation:dialog-in .25s ease-out; }
 .dialog-close { position:absolute; right:18px; top:17px; width:35px; height:35px; display:grid; place-items:center; border:1px solid var(--line); background:transparent; border-radius:50%; }
 .dialog-mark { color:var(--orange); margin-bottom:13px; }
+.dialog-mark .brand-logo { width:54px; }
 .dialog-content>.eyebrow { font-size:8px; margin-bottom:10px; }
 .dialog-title { font-size:48px; line-height:1.04; margin-bottom:15px; }
 .dialog-title em { color:var(--orange); }
@@ -300,8 +300,7 @@ html.lenis,html.lenis body { height:auto; }
   .header-inner { height:78px; padding:0 24px; }
   .desktop-nav { gap:18px; }
   .desktop-nav a { font-size:9px; }
-  .brand { font-size:14px; }
-  .brand-icon svg { width:28px; }
+  .brand-logo { width:64px; }
   .header-donate { padding:13px 15px; gap:12px; font-size:10px; }
   .hero { min-height:650px; }
   .hero h1 { font-size:83px; }
@@ -358,8 +357,7 @@ html.lenis,html.lenis body { height:auto; }
   .section-shell { padding-left:24px; padding-right:24px; }
   h2 { font-size:44px; }
   .header-inner { height:75px; padding:0 22px; gap:15px; }
-  .brand { font-size:15px; gap:7px; }
-  .brand-icon svg { width:29px; }
+  .brand-logo { width:58px; }
   .desktop-nav { display:none; }
   .header-donate { padding:12px 15px; font-size:9px; gap:12px; }
   .header-actions { gap:8px; }
@@ -494,7 +492,7 @@ html.lenis,html.lenis body { height:auto; }
   .contact-links { flex-direction:column; align-items:flex-start; gap:22px; margin-top:25px; padding-top:26px; }
   .contact-links>a { font-size:11px; gap:17px; }
   .site-footer { flex-wrap:wrap; padding:25px 24px; gap:19px; }
-  .site-footer>.footer-brand { width:100%; font-size:12px; }
+  .site-footer>.footer-brand { width:100%; }
   .site-footer>span { font-size:7px; }
   .back-top { margin-left:auto; font-size:6px; }
   .dialog-content { padding:29px 26px; }

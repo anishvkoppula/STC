@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { ArrowUpRight, HeartHandshake, Menu, X } from 'lucide-react';
+import { ArrowUpRight, Menu, X } from 'lucide-react';
+import { BrandLogo } from '@/components/brand-logo';
 
 const links = [['The idea', '#our-story'], ['What to give', '#donate'], ['Our people', '#our-team'], ['Past drives', '#our-drives']];
 
@@ -17,7 +18,7 @@ export function Navigation({ onDonate }: { onDonate: () => void }) {
   return (
     <header className="site-header">
       <div className="header-inner">
-        <a className="brand" href="#home" aria-label="Share The Care home"><span className="brand-icon"><HeartHandshake size={34} strokeWidth={1.65} /></span><span>share<br /><strong>the care.</strong></span></a>
+        <a className="brand" href="#home" aria-label="Share The Care home"><BrandLogo /></a>
         <nav className="desktop-nav" aria-label="Main navigation">{links.map(([label, href]) => <a key={href} href={href}>{label}</a>)}</nav>
         <div className="header-actions"><button className="button button-green header-donate" onClick={onDonate}>Give with us <ArrowUpRight size={17} /></button><button ref={menuToggle} className="menu-toggle" aria-label={open ? 'Close navigation' : 'Open navigation'} aria-controls="mobile-navigation" aria-expanded={open} onClick={() => setOpen(!open)}>{open ? <X /> : <Menu />}</button></div>
       </div>

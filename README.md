@@ -56,6 +56,7 @@ Motion honors `prefers-reduced-motion`. Without motion, all content and garment 
 - Generated transparent clothing sheet: `research/generated-assets/garment-rail.png`; optimized website sprite at `public/images/garment-rail.webp`. It was created with the built-in image generation tool. The complete prompt is in `research/generated-assets/PROMPT.md`.
 - Original portraits and historical maps: downloaded from the organization's existing site, with source inventory in `research/current-site/rendered-inventory.json`. Anish’s replacement source is `research/provided-assets/anish-koppula-new.png`; the website copy is `public/images/anish-koppula-new.webp`. Rahul’s supplied portrait is preserved at `public/images/rahul-gopalasetty.png`.
 - All four current maps: local Esri World Street Map exports; URLs, bounds, attribution, and example-route notes are in `research/example-drive-maps.json`.
+- Supplied stacked logo: the original screenshot is preserved at `research/provided-assets/share-the-care-logo-original.png`. `public/images/share-the-care-logo.svg` embeds the exact artwork, frames out the screenshot margins, and suppresses the pale background during rendering. The shared `BrandLogo` component appears in the header, footer, and pickup inquiry; `public/favicon.svg` uses the same artwork for the browser icon.
 - Fraunces and Manrope: locally hosted font files in `public/fonts`.
 
 ## Validation

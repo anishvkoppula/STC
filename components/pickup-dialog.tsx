@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { ArrowUpRight, HeartHandshake, Mail } from 'lucide-react';
+import { ArrowUpRight, Mail } from 'lucide-react';
+import { BrandLogo } from '@/components/brand-logo';
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
 
 export function PickupDialog({ open, onOpenChange, onReturnFocus }: { open: boolean; onOpenChange: (open: boolean) => void; onReturnFocus: () => void }) {
@@ -14,7 +15,7 @@ export function PickupDialog({ open, onOpenChange, onReturnFocus }: { open: bool
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent closeLabel="Close pickup inquiry" onCloseAutoFocus={event => { event.preventDefault(); onReturnFocus(); }}>
-        <div className="dialog-mark"><HeartHandshake size={28} strokeWidth={1.5} /></div>
+        <div className="dialog-mark"><BrandLogo /></div>
         <p className="eyebrow">GOOD STARTS WITH HELLO</p>
         <DialogTitle className="dialog-title">A little care<br /><em>starts here.</em></DialogTitle>
         <DialogDescription className="dialog-description">

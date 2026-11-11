@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import { ArrowDown, ArrowRight, ArrowUpRight, Asterisk, Heart, HeartHandshake, MapPin, PackageOpen, Shirt, Sprout } from 'lucide-react';
 import { Navigation } from '@/components/navigation';
+import { BrandLogo } from '@/components/brand-logo';
 import { PickupDialog } from '@/components/pickup-dialog';
 import { ParallaxComponent } from '@/components/ui/parallax-scrolling';
 import { ClothingRail } from '@/components/ui/clothing-rail';
@@ -58,7 +59,7 @@ export default function App() {
 
         <section className="contact-section section-shell" id="contact" aria-labelledby="contact-title"><div className="contact-top"><p className="eyebrow">FROM ONE NEIGHBOR TO ANOTHER</p><span className="local-time">SAN RAMON, CALIFORNIA <MapPin size={13} /></span></div><div className="contact-main"><h2 id="contact-title">A little care.<br /><em>A lot of possibility.</em></h2><button className="contact-circle" onClick={openInquiry} aria-label="Get in touch about donating"><ArrowUpRight size={46} strokeWidth={1.2} /><span>LET’S DO SOME GOOD</span></button></div><div className="contact-links"><a href="mailto:anishkoppula@gmail.com">anishkoppula@gmail.com <ArrowUpRight size={16} /></a><a href="tel:+16506806214">(650) 680-6214 <ArrowUpRight size={16} /></a><a href="https://www.instagram.com/sr_sharethecare/" target="_blank" rel="noreferrer">@sr_sharethecare <ArrowUpRight size={16} /></a></div></section>
       </main>
-      <footer className="site-footer"><a className="footer-brand" href="#home"><HeartHandshake size={23} strokeWidth={1.5} /> share the care.</a><p>Made of neighbors. Moved by care.</p><span>© {new Date().getFullYear()} Share The Care</span><a className="back-top" href="#home">BACK TO TOP <ArrowRight size={14} /></a></footer>
+      <footer className="site-footer"><a className="footer-brand" href="#home" aria-label="Share The Care home"><BrandLogo /></a><p>Made of neighbors. Moved by care.</p><span>© {new Date().getFullYear()} Share The Care</span><a className="back-top" href="#home">BACK TO TOP <ArrowRight size={14} /></a></footer>
       <DriveImpactDialog drive={activeDrive} onClose={() => setActiveDrive(null)} onReturnFocus={returnDriveFocus} />
       <PickupDialog open={inquiryOpen} onOpenChange={setInquiryOpen} onReturnFocus={returnInquiryFocus} />
     </div>
