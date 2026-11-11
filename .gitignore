@@ -1,0 +1,17 @@
+node_modules/
+dist/
+.DS_Store
+*.tsbuildinfo
+.playwright-mcp/
+test-results/
+
+# Local research, planning, and internal project notes
+research/
+docs/internal-notes.md
+docs/superpowers/
+
+# Local configuration and debug output
+.env
+.env.*
+!.env.example
+*.log
