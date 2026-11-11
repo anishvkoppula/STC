@@ -66,7 +66,7 @@ describe('Share The Care visitor experience', () => {
     expect(screen.getByRole('heading', { name: 'Gale Ranch' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Windemere' })).toBeInTheDocument();
     expect(document.querySelectorAll('.drive-card')).toHaveLength(4);
-    expect([...document.querySelectorAll('.person h3')].map(e => e.textContent)).toEqual(['Anish Koppula', 'Brian Ayabe', 'Shivam Pande']);
+    expect([...document.querySelectorAll('.person h3')].map(e => e.textContent)).toEqual(['Anish Koppula', 'Brian Ayabe', 'Rahul Gopalasetty']);
     expect(screen.getByRole('img', { name: 'Anish Koppula' })).toHaveAttribute('src', '/images/anish-koppula-new.webp');
     expect(screen.getAllByText('Co-founder / President')).toHaveLength(2);
     expect(screen.getByRole('link', { name: '(650) 680-6214' })).toHaveAttribute('href', 'tel:+16506806214');

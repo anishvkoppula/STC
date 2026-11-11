@@ -42,7 +42,7 @@ The requested default component path is **`/components/ui`**, at the project roo
 
 ## Content and behavior
 
-The original site's four pages were researched in `research/current-site/README.md`. The current roster follows the user's update: Anish Koppula and Brian Ayabe are Co-founder / President; Shivam Pande remains on the Logistics Team. All other profiles were removed from the page. Anish’s portrait uses the photo supplied on November 11; names and roles are bold. Food donation copy includes canned and unopened packaged food.
+The original site's four pages were researched in `research/current-site/README.md`. The current roster follows the user's update: Anish Koppula and Brian Ayabe are Co-founder / President; Rahul Gopalasetty is Vice President. All other profiles were removed from the page. Anish’s and Rahul’s portraits use the photos supplied on November 11; names and roles are bold. Rahul’s photo is framed within the same rectangle as the other portraits, with its circular screenshot border cropped out in CSS. Food donation copy includes canned and unopened packaged food.
 
 The trial contains four drive stories: Quail Run, The Bridges, Gale Ranch, and Windemere. All impact counts and activity stories remain **invented trial content**, explicitly requested by the user. The local presentation omits example badges at the user’s request; replace these placeholder results with verified records before using them as real impact. The first two dates come from the original site; the other event dates and collection routes are examples. All four maps now use consistent Esri basemaps showing actual San Ramon geography. Edit the shared `drives` records in `src/data.ts` to replace example content with verified results. No invented delivery claims are attributed to named partner organizations.
 
@@ -54,7 +54,7 @@ Motion honors `prefers-reduced-motion`. Without motion, all content and garment 
 
 - Supplied San Ramon photograph: preserved at `research/provided-assets/san-ramon-original.png`; optimized website copy at `public/images/san-ramon.webp`.
 - Generated transparent clothing sheet: `research/generated-assets/garment-rail.png`; optimized website sprite at `public/images/garment-rail.webp`. It was created with the built-in image generation tool. The complete prompt is in `research/generated-assets/PROMPT.md`.
-- Original portraits and historical maps: downloaded from the organization's existing site, with source inventory in `research/current-site/rendered-inventory.json`. Anish’s replacement source is `research/provided-assets/anish-koppula-new.png`; the website copy is `public/images/anish-koppula-new.webp`.
+- Original portraits and historical maps: downloaded from the organization's existing site, with source inventory in `research/current-site/rendered-inventory.json`. Anish’s replacement source is `research/provided-assets/anish-koppula-new.png`; the website copy is `public/images/anish-koppula-new.webp`. Rahul’s supplied portrait is preserved at `public/images/rahul-gopalasetty.png`.
 - All four current maps: local Esri World Street Map exports; URLs, bounds, attribution, and example-route notes are in `research/example-drive-maps.json`.
 - Fraunces and Manrope: locally hosted font files in `public/fonts`.
 

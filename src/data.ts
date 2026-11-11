@@ -1,7 +1,7 @@
 export const team = [
   { name: 'Anish Koppula', role: 'Co-founder / President', year: '2027', image: 'anish-koppula-new.webp', position: 'center 8%' },
   { name: 'Brian Ayabe', role: 'Co-founder / President', year: '2027', image: 'brian-ayabe.jpg', position: 'center 25%' },
-  { name: 'Shivam Pande', role: 'Logistics Team', year: '2027', image: 'shivam-pande.jpg', position: 'center 18%' },
+  { name: 'Rahul Gopalasetty', role: 'Vice President', year: '2027', image: 'rahul-gopalasetty.png', position: 'center', zoom: 1.7 },
 ];
 
 export type Drive = {
