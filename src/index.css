@@ -552,7 +552,8 @@ html.lenis,html.lenis body { height:auto; }
 .impact-route ul { padding:0; margin:20px 0 0; list-style:none; display:flex; flex-wrap:wrap; gap:12px 20px; }
 .impact-route li { display:flex; align-items:center; gap:6px; font-size:10px; color:#596650; }
 .impact-back { margin-top:30px; font-size:11px; }
-@media(min-width:651px) { .team-grid { grid-template-columns:repeat(3,minmax(0,1fr)); } }
+@media(min-width:651px) { .team-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media(min-width:1101px) { .team-grid { grid-template-columns:repeat(4,minmax(0,1fr)); } }
 @media(max-width:800px) { .rail-detail-actions { grid-column:2; flex-direction:row; margin-left:0; gap:25px; } }
 @media(max-width:650px) {
   .rail-detail-actions { grid-column:1; flex-wrap:wrap; }
