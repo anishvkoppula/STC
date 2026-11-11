@@ -50,12 +50,12 @@ describe('Share The Care visitor experience', () => {
     }
   });
 
-  it('opens the pickup inquiry from Give Fresh Start and describes packaged food donations', async () => {
+  it('opens the pickup inquiry from Give Fresh Start and describes the expanded donation categories', async () => {
     render(<App />);
-    expect(screen.getByText(/We collect clothing, canned food, and unopened packaged food/i)).toBeInTheDocument();
+    expect(screen.getByText('We collect clothing, shelf-stable food, unopened hygiene products, and baby essentials from your doorstep.')).toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: 'Give Fresh Start' }));
     const dialog = await screen.findByRole('dialog');
-    expect(within(dialog).getByLabelText('What would you like to give?')).toHaveAttribute('placeholder', expect.stringContaining('packaged food'));
+    expect(within(dialog).getByLabelText('What would you like to give?')).toHaveAttribute('placeholder', 'Clothing, shelf-stable food, unopened hygiene products, baby essentials, or a question…');
   });
 
   it('labels the historical roster and events and keeps the published contacts available', () => {

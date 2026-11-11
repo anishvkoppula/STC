@@ -23,7 +23,7 @@ export function PickupDialog({ open, onOpenChange, onReturnFocus }: { open: bool
         <div className="inquiry-fields">
           <label>Your name<input autoComplete="given-name" value={name} onChange={e => setName(e.target.value)} placeholder="First name" aria-invalid={attempted && !name.trim()} required /></label>
           <label>Your neighborhood<input autoComplete="address-level3" value={neighborhood} onChange={e => setNeighborhood(e.target.value)} placeholder="e.g. The Bridges, San Ramon" aria-invalid={attempted && !neighborhood.trim()} required /></label>
-          <label>What would you like to give?<textarea value={items} onChange={e => setItems(e.target.value)} placeholder="Clothes, canned or packaged food, or a question…" aria-invalid={attempted && !items.trim()} rows={3} required /></label>
+          <label>What would you like to give?<textarea value={items} onChange={e => setItems(e.target.value)} placeholder="Clothing, shelf-stable food, unopened hygiene products, baby essentials, or a question…" aria-invalid={attempted && !items.trim()} rows={3} required /></label>
         </div>
         {attempted && !ready && <p className="field-error" role="alert">Add your name, neighborhood, and donation details to prepare your email.</p>}
         <a className="button button-orange inquiry-submit" href={mailto} onClick={e => { if (!ready) { e.preventDefault(); setAttempted(true); } }}>

@@ -42,7 +42,7 @@ The requested default component path is **`/components/ui`**, at the project roo
 
 ## Content and behavior
 
-The original site's four pages were researched in `research/current-site/README.md`. The current roster follows the user's update: Anish Koppula and Brian Ayabe are Co-founder / President; Rahul Gopalasetty is Vice President. All other profiles were removed from the page. Anish’s and Rahul’s portraits use the photos supplied on November 11; names and roles are bold. Rahul’s photo is framed within the same rectangle as the other portraits, with its circular screenshot border cropped out in CSS. Food donation copy includes canned and unopened packaged food.
+The original site's four pages were researched in `research/current-site/README.md`. The current roster follows the user's update: Anish Koppula and Brian Ayabe are Co-founder / President; Rahul Gopalasetty is Vice President. All other profiles were removed from the page. Anish’s and Rahul’s portraits use the photos supplied on November 11; names and roles are bold. Rahul’s photo is framed within the same rectangle as the other portraits, with its circular screenshot border cropped out in CSS. The current collection message covers clothing, shelf-stable food, unopened hygiene products, and baby essentials from doorstep pickups. The homepage, donation section, pickup inquiry, and page description all reflect these categories; historical drive records retain their original clothing and food details.
 
 The trial contains four drive stories: Quail Run, The Bridges, Gale Ranch, and Windemere. All impact counts and activity stories remain **invented trial content**, explicitly requested by the user. The local presentation omits example badges at the user’s request; replace these placeholder results with verified records before using them as real impact. The first two dates come from the original site; the other event dates and collection routes are examples. All four maps now use consistent Esri basemaps showing actual San Ramon geography. Edit the shared `drives` records in `src/data.ts` to replace example content with verified results. No invented delivery claims are attributed to named partner organizations.
 
@@ -60,6 +60,6 @@ Motion honors `prefers-reduced-motion`. Without motion, all content and garment 
 
 ## Validation
 
-Seven automated interaction tests cover email encoding, inquiry and drive-dialog focus restoration, all four garment stories and maps, the Give Fresh Start action, updated food copy and roster, four drive cards, mobile navigation, and the mouse-release regression. The production build also performs a strict TypeScript check.
+Seven automated interaction tests cover email encoding, inquiry and drive-dialog focus restoration, all four garment stories and maps, the Give Fresh Start action, expanded collection copy and updated roster, four drive cards, mobile navigation, and the mouse-release regression. The production build also performs a strict TypeScript check.
 
 Browser QA covered desktop at 1440px, mobile at 390px, actual GSAP parallax movement, drag/arrow garment scrolling, route expansion, all image loads, dialog containment and Escape, mobile menu, zero horizontal page overflow, and reduced-motion behavior. QA captures are in `.playwright-mcp/`.

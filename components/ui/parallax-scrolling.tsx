@@ -68,10 +68,10 @@ export function ParallaxComponent({ onDonate, imageSrc = '/images/san-ramon.webp
         <div data-parallax-layer="3" className="hero-content">
           <p className="hero-eyebrow" data-hero-reveal><span /> A LITTLE CARE. A STRONGER COMMUNITY.</p>
           <h1 id="hero-title" data-hero-reveal>Good starts<br /><em>close to home.</em></h1>
-          <p className="hero-description" data-hero-reveal>Your extra can be someone’s enough. We bring<br className="desktop-break" /> San Ramon neighbors together through<br className="desktop-break" /> doorstep donation pickups.</p>
+          <p className="hero-description" data-hero-reveal>We collect clothing, shelf-stable food,<br className="desktop-break" /> unopened hygiene products, and baby essentials<br className="desktop-break" /> from your doorstep.</p>
           <div className="hero-buttons" data-hero-reveal><button className="button button-lime" onClick={onDonate}>Ask about a pickup <ArrowUpRight size={19} /></button><a className="hero-text-link" href="#donate">See what you can give <ArrowDown size={16} /></a></div>
         </div>
-        <div data-parallax-layer="4" className="hero-aside" aria-hidden="true"><Asterisk size={47} strokeWidth={1.2} /><p>A little less in your closet.<br />A little more good in the world.</p></div>
+        <div data-parallax-layer="4" className="hero-aside" aria-hidden="true"><Asterisk size={47} strokeWidth={1.2} /><p>A little extra at home.<br />A little more good in the world.</p></div>
       </div>
       <div className="hero-bottom"><span><MapPin size={14} /> ROOTED IN SAN RAMON, CA</span><a href="#our-story" aria-label="Scroll to our story"><ArrowDown size={18} /><span>THE GOOD GOES ON</span></a></div>
       <span className="hero-photo-note">OUR NEIGHBORHOOD. OUR REASON.</span>
