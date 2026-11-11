@@ -57,7 +57,7 @@ h2 em, h1 em, .dialog-title em { font-weight:400; }
 .site-header { position:sticky; top:0; z-index:30; background:rgba(247,245,237,.97); backdrop-filter:blur(16px); }
 .header-inner { display:flex; align-items:center; justify-content:space-between; height:94px; max-width:1440px; margin:auto; padding:0 42px; gap:40px; }
 .brand { display:inline-flex; align-items:center; flex-shrink:0; }
-.brand-logo { display:block; width:76px; height:auto; }
+.brand-logo { display:block; width:76px; height:auto; aspect-ratio:1; object-fit:contain; padding:5px; border:1.5px solid #000; border-radius:0; }
 .desktop-nav { display:flex; gap:34px; margin-left:55px; }
 .desktop-nav a { font-size:11px; font-weight:600; padding:15px 0; position:relative; }
 .desktop-nav a::after { content:''; position:absolute; left:0; bottom:7px; height:1px; width:0; background:var(--forest); transition:width .2s; }
