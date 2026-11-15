@@ -3,6 +3,7 @@ export const team = [
   { name: 'Brian Ayabe', role: 'Co-founder / President', year: '2027', image: 'brian-ayabe.jpg', position: 'center 25%' },
   { name: 'Rahul Gopalasetty', role: 'Vice President', year: '2027', image: 'rahul-gopalasetty.png', position: 'center', zoom: 1.7 },
   { name: 'Shivam Pande', role: 'Vice President', year: '2027', image: 'shivam-pande.jpg', position: 'center 18%' },
+  { name: 'Devi Verma', role: 'Director of Outreach & Development', image: 'devi-verma.png', position: 'center bottom', zoom: 1.8 },
 ];
 
 export type Drive = {
