@@ -3,23 +3,15 @@ import { describe, expect, it } from 'vitest';
 import App from '../src/App';
 
 describe('Share The Care visitor experience', () => {
-  it('lets a visitor prepare an honest pickup inquiry and close it with Escape', async () => {
+  it('lets a visitor open a pickup request and close it with Escape', async () => {
     render(<App />);
     const trigger = screen.getAllByRole('button', { name: /ask about a pickup/i })[0];
     trigger.focus();
     fireEvent.click(trigger);
     const dialog = await screen.findByRole('dialog');
-    expect(within(dialog).getByText(/open your email app/i)).toBeInTheDocument();
-    fireEvent.change(within(dialog).getByLabelText('Your name'), { target: { value: 'Sam & Alex' } });
-    fireEvent.change(within(dialog).getByLabelText('Your neighborhood'), { target: { value: 'The Bridges' } });
-    fireEvent.change(within(dialog).getByLabelText('What would you like to give?'), { target: { value: 'Two bags of clothing & canned food' } });
-    const email = within(dialog).getByRole('link', { name: /open email draft/i });
-    const href = email.getAttribute('href')!;
-    expect(href).toMatch(/^mailto:anishkoppula@gmail.com\?/);
-    const parameters = new URLSearchParams(href.split('?')[1]);
-    expect(parameters.get('subject')).toContain('The Bridges');
-    expect(parameters.get('body')).toContain('Sam & Alex');
-    expect(parameters.get('body')).toContain('Two bags of clothing & canned food');
+    expect(within(dialog).getByLabelText('Your email')).toBeInTheDocument();
+    expect(within(dialog).getByLabelText('Pickup address')).toBeInTheDocument();
+    expect(within(dialog).getByRole('button', { name: /send pickup request/i })).toBeInTheDocument();
     expect(within(dialog).queryByText(/pickup confirmed/i)).not.toBeInTheDocument();
     fireEvent.keyDown(dialog, { key: 'Escape' });
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
