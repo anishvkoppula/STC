@@ -11,7 +11,7 @@ type Field = keyof typeof emptyDetails;
 export function PickupDialog({ open, onOpenChange, onReturnFocus }: { open: boolean; onOpenChange: (open: boolean) => void; onReturnFocus: () => void }) {
   const [details, setDetails] = useState(emptyDetails);
   const [errors, setErrors] = useState<Field[]>([]);
-  const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
+  const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error' | 'rate-limited'>('idle');
   const inFlight = useRef(false);
   const submissionId = useRef<string | null>(null);
   const [reference, setReference] = useState('');
@@ -55,6 +55,10 @@ export function PickupDialog({ open, onOpenChange, onReturnFocus }: { open: bool
           website: new FormData(form).get('website') || '',
         }),
       });
+      if (response.status === 429) {
+        setStatus('rate-limited');
+        return;
+      }
       const result = await response.json();
       if (!response.ok || result?.success !== true || typeof result?.reference !== 'string' || !/^STC-[A-F0-9]{12}$/.test(result.reference)) {
         throw new Error('Pickup request was not accepted');
@@ -86,6 +90,7 @@ export function PickupDialog({ open, onOpenChange, onReturnFocus }: { open: bool
               <h3>Request submitted. Thank you!</h3>
               <p>Your reference: <strong>{reference}</strong></p>
               <p>Our team will email you to arrange your pickup. Your pickup date and time still need to be confirmed.</p>
+              <p>Please check your spam folder for our acknowledgement.</p>
             </div>
             <button type="button" className="button button-orange inquiry-submit" onClick={() => setStatus('idle')}>Send another request <ArrowUpRight size={18} /></button>
           </>
@@ -102,6 +107,7 @@ export function PickupDialog({ open, onOpenChange, onReturnFocus }: { open: bool
             </fieldset>
             {errors.length > 0 && <p className="field-error" id="pickup-field-error" role="alert">Please add your name, a valid email, neighborhood, pickup address, and donation details.</p>}
             {status === 'error' && <p className="field-error" role="alert">We couldn’t confirm your request was saved. Your details are still here. Please try again, <a href={mailto}>Email our team</a>, or call us below.</p>}
+            {status === 'rate-limited' && <p className="field-error" role="alert">Too many requests have been sent from your connection. Your details are still here. Please wait 10 minutes before trying again, <a href={mailto}>Email our team</a>, or call us below.</p>}
             <button type="submit" className="button button-orange inquiry-submit" disabled={sending}>
               <Mail size={17} /> {sending ? 'Sending…' : 'Send pickup request'} <ArrowUpRight size={18} />
             </button>

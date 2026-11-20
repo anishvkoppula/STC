@@ -106,6 +106,19 @@ describe('Pickup request delivery', () => {
     expect(JSON.parse(send.mock.calls[1][1].body).submissionId).toBe(JSON.parse(send.mock.calls[0][1].body).submissionId);
   });
 
+  it('explains a firewall rate limit without losing the request', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response('<html>Too Many Requests</html>', { status: 429 })));
+    openRequest();
+    fillRequest();
+    fireEvent.click(screen.getByRole('button', { name: 'Send pickup request' }));
+    expect(await screen.findByRole('alert')).toHaveTextContent(/wait 10 minutes/i);
+    expect(screen.getByLabelText('Your email')).toHaveValue('sam@example.com');
+    expect(screen.getByLabelText('Pickup address')).toHaveValue(' 123 Example Lane, San Ramon, CA ');
+    expect(screen.getByRole('link', { name: 'Email our team' })).toHaveAttribute('href', expect.stringContaining('mailto:srsharethecare@gmail.com?'));
+    expect(screen.queryByRole('status')).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Send pickup request' })).toBeEnabled();
+  });
+
   it('keeps the request available after a network failure', async () => {
     vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new TypeError('Network unavailable')));
     openRequest();

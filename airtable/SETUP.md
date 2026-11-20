@@ -1,19 +1,27 @@
 # Pickup tracker setup
 
-The private Share The Care Pickups base and all five grid views have now been created in the organization Airtable account. The application migration is not deployed yet. Gmail authorization, automation tests, runtime access, and Vercel release checks are separate steps; code and mocked tests do not complete those steps. Use the existing base rather than creating a duplicate.
+The private Share The Care Pickups base and all five grid views are configured in the organization Airtable account. The website is deployed at https://srsharethecare.org with a base-restricted server token and two active Gmail automations. Real preview and public submissions, saved records, acknowledgement delivery, and team notifications were verified on November 19, 2026. Use this existing base rather than creating a duplicate.
+
+## Current operation
+
+Open **New / needs contact** to follow up, reply to the team notification to email the donor, then update Status, Assigned volunteer, Scheduled pickup, Last follow-up, and Notes. Blank Status means New. Use **Email needs attention** to investigate messages that remain blank or Pending. Setup records are clearly labeled and marked Cancelled.
+
+The organization account is on Airtable's automatic 14-day Team trial, with no paid subscription added. Check the automation allowance before drives and after the trial: two workflows use two runs per request. Some real acknowledgement tests reached the test mailbox's Spam folder; the website asks visitors to check Spam. Neither a successful action nor a Sent status guarantees inbox placement.
+
+Vercel has five server-only secrets in Production and the integration Preview branch. Production allows only the canonical apex and www origins. The published Firewall rule limits `/api/pickup` to five requests per IP per 600 seconds, returning HTTP 429 above that limit. This reduces repeat submissions; it does not eliminate distributed spam.
 
 ## Accounts and access
 
 Use `srsharethecare@gmail.com` as the Airtable owner and the connected Gmail sender. Keep the base private. Invite individual team accounts only when the owner provides the intended people and access levels.
 
-The Airtable ChatGPT connection helps manage the table. The deployed website separately needs a server-only personal access token; the ChatGPT connection does not automatically supply a runtime credential.
+The website uses its own server-only personal access token with only record read/write scopes and only this base. A ChatGPT connection is not required for normal operation and does not automatically supply a runtime credential. The following instructions describe rebuilding the setup if needed.
 
 1. Finish Airtable sign-in using the organization account.
 2. Create the base using `pickup-base.json` and the [Create base API](https://airtable.com/developers/web/api/create-base), or create the same fields in the UI. The JSON is a schema definition, not a file that Airtable's CSV importer can import. Set `workspaceId` when calling the API.
 3. For API creation, a temporary setup token needs `schema.bases:write` and access to the intended workspace. The runtime token needs `data.records:read` and `data.records:write` and access to the new base. Revoke the setup token when finished. Don't paste either token into chat, Git, or browser frontend configuration.
 4. Record the base ID (`app…`) and Pickup Requests table ID (`tbl…`). Store runtime settings in Vercel project environment variables; use `.env.example` for the names. Set `PICKUP_ACCEPTING_REQUESTS=false` until the complete workflow has passed its setup test.
 
-If an Airtable schema option is rejected by the current API, use the UI to create that field and verify the final schema before enabling intake. The prepared schema has not yet been submitted to a real account.
+The real schema was created and verified through Airtable's UI. The JSON remains a rebuilding reference and was not submitted to the Create base API. If an option is rejected by that API, use the UI to create the field and verify its final configuration before enabling intake.
 
 ## Team views
 
@@ -31,7 +39,7 @@ Status choices: New, Contacted, Scheduled, Picked up, Cancelled. Assigned volunt
 
 ## Organization Gmail automation
 
-Use Airtable's **Gmail: Send email** action, connected through Google's authorization screen as `srsharethecare@gmail.com`. Do not use the generic Airtable Send email action for donor acknowledgements on a Free plan; that action restricts recipients to verified base collaborators. Current Airtable help pages disagree about whether Gmail actions require a paid plan, so confirm actual availability in this workspace. Do not start a paid subscription without the owner's decision.
+Use Airtable's **Gmail: Send email** action, connected through Google's authorization screen as `srsharethecare@gmail.com`. The connected account was authorized for sending and both real workflow tests passed. Do not use the generic Airtable Send email action for donor acknowledgements on a Free plan; that action restricts recipients to verified base collaborators. Airtable's [Send email FAQ](https://support.airtable.com/articles/1091012569-airtable-automation-action-send-email) says Free users can use Gmail actions for non-collaborators. Recheck availability and limits after the trial; do not start a paid subscription without the owner's decision.
 
 Create **two independent automations**, each triggered **When a record is created** in Pickup Requests. Triggering on creation prevents ordinary visitor retries or staff edits from resending emails. Keeping the triggers separate ensures that a donor-send failure does not suppress the organization's notification.
 
