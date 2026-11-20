@@ -6,7 +6,8 @@
     "allowImportingTsExtensions": true, "resolveJsonModule": true,
     "esModuleInterop": true, "allowSyntheticDefaultImports": true,
     "paths": {"@/*": ["./*"]},
-    "types": ["node"]
+    "types": ["node"],
+    "typeRoots": ["./node_modules/@types"]
   },
   "include": ["src", "components", "lib", "server", "api", "tests", "vite.config.ts"]
 }
