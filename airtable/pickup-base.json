@@ -1,0 +1,25 @@
+{
+  "name": "Share The Care",
+  "tables": [{
+    "name": "Pickup Requests",
+    "description": "Private donor pickup inquiries and team follow-up. Never share publicly.",
+    "fields": [
+      { "name": "Request ID", "type": "singleLineText" },
+      { "name": "Name", "type": "singleLineText" },
+      { "name": "Email", "type": "email" },
+      { "name": "Neighborhood", "type": "singleLineText" },
+      { "name": "Pickup address", "type": "multilineText" },
+      { "name": "Donation details", "type": "multilineText" },
+      { "name": "Submitted at", "type": "createdTime", "options": { "result": { "type": "dateTime", "options": { "dateFormat": { "name": "us" }, "timeFormat": { "name": "12hour" }, "timeZone": "America/Los_Angeles" } } } },
+      { "name": "Status", "type": "singleSelect", "options": { "choices": [{ "name": "New" }, { "name": "Contacted" }, { "name": "Scheduled" }, { "name": "Picked up" }, { "name": "Cancelled" }] } },
+      { "name": "Assigned volunteer", "type": "singleLineText" },
+      { "name": "Scheduled pickup", "type": "dateTime", "options": { "dateFormat": { "name": "us" }, "timeFormat": { "name": "12hour" }, "timeZone": "America/Los_Angeles" } },
+      { "name": "Last follow-up", "type": "dateTime", "options": { "dateFormat": { "name": "us" }, "timeFormat": { "name": "12hour" }, "timeZone": "America/Los_Angeles" } },
+      { "name": "Notes", "type": "multilineText" },
+      { "name": "Confirmation status", "type": "singleSelect", "options": { "choices": [{ "name": "Pending" }, { "name": "Sent" }, { "name": "Needs attention" }] } },
+      { "name": "Notification status", "type": "singleSelect", "options": { "choices": [{ "name": "Pending" }, { "name": "Sent" }, { "name": "Needs attention" }] } },
+      { "name": "Source", "type": "singleLineText" },
+      { "name": "Submission key", "type": "singleLineText", "description": "Internal deduplication key. Hide from normal team views; do not edit." }
+    ]
+  }]
+}

@@ -31,7 +31,9 @@ The production build is emitted to `dist/`. Node 22.12+ is required by the toolc
 - `components/drive-impact-dialog.tsx`: accessible example drive results, donation breakdown, activity story, and route map.
 - `components/past-drives.tsx`: four drive cards with expandable map routes and the same shared stories.
 - `components/ui/dialog.tsx`: shadcn-style accessible Radix dialog primitive.
-- `components/pickup-dialog.tsx`: pickup inquiry with direct delivery to Gmail via FormSubmit.
+- `components/pickup-dialog.tsx`: pickup inquiry sent to the private Airtable intake API.
+- `api/pickup.ts` and `server/pickup.ts`: Vercel endpoint, server-side validation, and retry-safe Airtable upsert.
+- `airtable/pickup-base.json` and `airtable/SETUP.md`: tracker schema, Gmail automation, account requirements, and release checks.
 - `components/navigation.tsx`: responsive navigation with keyboard focus restoration.
 - `lib/utils.ts`: conventional `cn` utility.
 - `components.json`: shadcn configuration with `@` pointing to the project root.
@@ -46,18 +48,17 @@ The original site's four pages were researched in `research/current-site/README.
 
 The trial contains four drive stories: Quail Run, The Bridges, Gale Ranch, and Windemere. All impact counts and activity stories remain **invented trial content**, explicitly requested by the user. The local presentation omits example badges at the user’s request; replace these placeholder results with verified records before using them as real impact. The first two dates come from the original site; the other event dates and collection routes are examples. All four maps now use consistent Esri basemaps showing actual San Ramon geography. Edit the shared `drives` records in `src/data.ts` to replace example content with verified results. No invented delivery claims are attributed to named partner organizations.
 
-The inquiry dialog **submits a pickup request directly** to `anishkoppula@gmail.com` through [FormSubmit](https://formsubmit.co/). It collects the donor's name, email, neighborhood, pickup address, and donation details. Email subjects use `Pickup request — [neighborhood]`; the donor's address is the Reply-To, so replying in Gmail contacts the donor. Submitting requests an appointment; the team still arranges and confirms the pickup separately. The phone is (650) 680-6214; the social link retains the original published handle. Route details include links to the complete map images.
+The prepared Airtable integration saves pickup requests in a private shared tracker. The organization contact address is `srsharethecare@gmail.com`. Visitors supply their name, email, neighborhood, pickup address, and donation details. A saved request receives a reference number; the team still arranges and confirms the pickup separately. Airtable's connected Gmail automation is intended to send a donor acknowledgement and a separate notification to the organization inbox, with donor Reply-To on that notification.
 
-### Activate pickup email delivery
+### Airtable setup and release
 
-1. Serve the site with `npm run dev`, or deploy the production build to the usual static host.
-2. Send one clearly labeled test request through the form.
-3. Check `anishkoppula@gmail.com` for FormSubmit's activation email, including Spam. Click **Activate Form** to confirm the recipient. Complete activation for the production site's form too if prompted; local activation is not proof that the production form is active.
-4. Send another test from the production site. Confirm that it arrives with all five fields and that Gmail's Reply action addresses the donor. Do this before accepting real requests.
+**The Airtable migration is not live yet.** The private Airtable base and team views have been created; runtime access, Gmail automation verification, and deployment are still pending. The currently deployed FormSubmit version remains active until the working cutover is configured and verified. Follow [airtable/SETUP.md](airtable/SETUP.md) for exact fields, views, sender authorization, email templates, runtime credentials, abuse protection, and end-to-end checks. Do not deploy this cutover with missing configuration.
 
-There are no API keys, Gmail passwords, custom server, or application database to configure. The frontend sends the details over HTTPS to FormSubmit, which emails them to the recipient and [retains a submission archive for 30 days](https://formsubmit.co/documentation). Gmail keeps the received emails according to the mailbox's retention settings. This is an inbox workflow, without a spreadsheet or follow-up status tracker.
+The Vercel API reads server-only environment variables listed in `.env.example`: `AIRTABLE_ACCESS_TOKEN`, `AIRTABLE_BASE_ID`, `AIRTABLE_TABLE_ID`, `PICKUP_ALLOWED_ORIGINS`, and `PICKUP_ACCEPTING_REQUESTS`. Intake is disabled unless explicitly enabled. Never expose the access token through a `VITE_` variable. Connecting Airtable to ChatGPT does not by itself authenticate the deployed website.
 
-The form validates required details and email, blocks duplicate submissions while sending, includes a spam honeypot, and retains entered details on failure. It accepts only an explicit service success response; HTTP 200 alone or an activation response is not treated as delivery confirmation. An email-draft fallback is offered after a failure. The recipient must be activated before automatic delivery works. No automatic donor confirmation email is sent.
+The server validates required fields and email, rejects cross-origin and oversized requests, and saves only the intake fields on initial creation. A retry first looks up the saved request and returns its receipt without rewriting corrected contact details, status, notes, assignment, or email state. New requests use a deterministic merge key to help concurrent retries reuse the same record. The browser retains entries on failures and offers an email fallback to the organization inbox. Record creation triggers independent donor and team Gmail automations; changing a pickup's status does not trigger another acknowledgement.
+
+For full local backend testing, use Vercel's development runner with server configuration. `npm run dev` runs the frontend only. Automated tests mock the external HTTP boundary; passing tests are not proof that the base or Gmail sender is connected. The phone remains (650) 680-6214.
 
 Motion honors `prefers-reduced-motion`. Without motion, all content and garment buttons remain usable. Animation cleanup removes only this component's triggers/ticker and destroys its Lenis instance. The specifically requested Lenis package is deprecated upstream in favor of `lenis`; it is retained here to match the supplied integration.
 
@@ -72,6 +73,6 @@ Motion honors `prefers-reduced-motion`. Without motion, all content and garment 
 
 ## Validation
 
-Automated interaction tests cover pickup submission payload and Reply-To, required details and email validation, duplicate submission prevention, explicit service success and activation handling, failure recovery and retry, inquiry and drive-dialog focus restoration, all four garment stories and maps, the Give Fresh Start action, expanded collection copy and updated roster, four drive cards, mobile navigation, and the mouse-release regression. Delivery tests mock the external HTTP boundary; live inbox delivery and activation require the setup check above. The production build also performs a strict TypeScript check.
+Automated tests cover Airtable intake and server configuration, validation and request limits, preservation of staff workflow fields during retries, receipt references, organization contact links, duplicate submission prevention, failure recovery and retry, inquiry and drive-dialog focus restoration, all four garment stories and maps, the Give Fresh Start action, expanded collection copy and updated roster, four drive cards, mobile navigation, and the mouse-release regression. Database and delivery tests mock the external HTTP boundary; actual Airtable creation and Gmail delivery require the setup checks above. The production build also performs a strict TypeScript check.
 
 Browser QA covered desktop at 1440px, mobile at 390px, actual GSAP parallax movement, drag/arrow garment scrolling, route expansion, all image loads, dialog containment and Escape, mobile menu, zero horizontal page overflow, and reduced-motion behavior. QA captures are in `.playwright-mcp/`.

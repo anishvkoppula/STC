@@ -17,17 +17,18 @@ function fillRequest() {
 }
 
 describe('Pickup request delivery', () => {
-  it('sends all donor details to Gmail with the donor as Reply-To', async () => {
-    const send = vi.fn().mockResolvedValue(new Response(JSON.stringify({ success: 'true', message: 'The form was submitted successfully.' })));
+  it('saves all donor details through the private API and shows a request reference', async () => {
+    const send = vi.fn().mockResolvedValue(new Response(JSON.stringify({ success: true, reference: 'STC-51E6BB546F5D' })));
     vi.stubGlobal('fetch', send);
     openRequest();
     fillRequest();
     fireEvent.click(screen.getByRole('button', { name: 'Send pickup request' }));
 
     expect(await screen.findByRole('status')).toHaveTextContent(/request submitted/i);
+    expect(screen.getByRole('status')).toHaveTextContent('STC-51E6BB546F5D');
     expect(send).toHaveBeenCalledOnce();
     const [url, request] = send.mock.calls[0];
-    expect(url).toBe('https://formsubmit.co/ajax/anishkoppula@gmail.com');
+    expect(url).toBe('/api/pickup');
     expect(request.method).toBe('POST');
     expect(JSON.parse(request.body)).toMatchObject({
       name: 'Sam & Alex',
@@ -35,10 +36,8 @@ describe('Pickup request delivery', () => {
       neighborhood: 'The Bridges',
       address: '123 Example Lane, San Ramon, CA',
       items: 'Two bags of clothing & canned food',
-      _replyto: 'sam@example.com',
-      _subject: 'Pickup request — The Bridges',
-      _template: 'table',
-      _honey: '',
+      submissionId: expect.stringMatching(/^[a-f0-9-]{36}$/i),
+      website: '',
     });
     expect(screen.queryByText(/pickup confirmed/i)).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Send pickup request' })).not.toBeInTheDocument();
@@ -49,6 +48,9 @@ describe('Pickup request delivery', () => {
   it.each([
     ['Your name', '   '],
     ['Your email', 'not-an-email'],
+    ['Your email', 'sam@exa_mple.com'],
+    ['Your email', 'sam@exa,mple.com'],
+    ['Your email', 'sam@example'],
     ['Your neighborhood', '   '],
     ['Pickup address', '   '],
     ['What would you like to give?', '   '],
@@ -76,20 +78,20 @@ describe('Pickup request delivery', () => {
     expect(screen.getByRole('button', { name: /sending/i })).toBeDisabled();
     fireEvent.submit(button.closest('form')!);
     expect(send).toHaveBeenCalledOnce();
-    finish(new Response(JSON.stringify({ success: true, message: 'The form was submitted successfully.' })));
+    finish(new Response(JSON.stringify({ success: true, reference: 'STC-51E6BB546F5D' })));
     expect(await screen.findByRole('status')).toHaveTextContent(/request submitted/i);
   });
 
   it.each([
-    ['a service rejection', { success: 'false', message: 'Please try again.' }, 200],
+    ['a rejected save', { success: false }, 200],
     ['a missing confirmation', { message: 'Something went wrong.' }, 200],
-    ['an HTTP error', { success: true, message: 'Unavailable.' }, 503],
-    ['a pending activation', { success: 'false', message: 'This form needs Activation.' }, 200],
-    ['an activation response marked successful', { success: 'true', message: 'A confirmation email has been sent. The form will be actived shortly.' }, 200],
+    ['an HTTP error', { success: true, reference: 'STC-51E6BB546F5D' }, 503],
+    ['a non-boolean success value', { success: 'true', reference: 'STC-51E6BB546F5D' }, 200],
+    ['a missing reference', { success: true }, 200],
   ])('preserves entries after %s and allows retry', async (_name, body, status) => {
     const send = vi.fn()
       .mockResolvedValueOnce(new Response(JSON.stringify(body), { status }))
-      .mockResolvedValueOnce(new Response(JSON.stringify({ success: true, message: 'The form was submitted successfully.' })));
+      .mockResolvedValueOnce(new Response(JSON.stringify({ success: true, reference: 'STC-51E6BB546F5D' })));
     vi.stubGlobal('fetch', send);
     openRequest();
     fillRequest();
@@ -98,9 +100,10 @@ describe('Pickup request delivery', () => {
     expect(screen.queryByRole('status')).not.toBeInTheDocument();
     expect(screen.getByLabelText('Your email')).toHaveValue('sam@example.com');
     expect(screen.getByLabelText('Pickup address')).toHaveValue(' 123 Example Lane, San Ramon, CA ');
-    expect(screen.getByRole('link', { name: 'Email our team' })).toHaveAttribute('href', expect.stringContaining('mailto:anishkoppula@gmail.com?'));
+    expect(screen.getByRole('link', { name: 'Email our team' })).toHaveAttribute('href', expect.stringContaining('mailto:srsharethecare@gmail.com?'));
     fireEvent.click(screen.getByRole('button', { name: 'Send pickup request' }));
     expect(await screen.findByRole('status')).toHaveTextContent(/request submitted/i);
+    expect(JSON.parse(send.mock.calls[1][1].body).submissionId).toBe(JSON.parse(send.mock.calls[0][1].body).submissionId);
   });
 
   it('keeps the request available after a network failure', async () => {

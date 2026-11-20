@@ -2,6 +2,8 @@ import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { ArrowUpRight, CheckCircle2, Mail } from 'lucide-react';
 import { BrandLogo } from '@/components/brand-logo';
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
+import { organizationEmail } from '@/lib/contact';
+import { isValidPickupEmail } from '@/lib/pickup-email';
 
 const emptyDetails = { name: '', email: '', neighborhood: '', address: '', items: '' };
 type Field = keyof typeof emptyDetails;
@@ -11,10 +13,12 @@ export function PickupDialog({ open, onOpenChange, onReturnFocus }: { open: bool
   const [errors, setErrors] = useState<Field[]>([]);
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
   const inFlight = useRef(false);
+  const submissionId = useRef<string | null>(null);
+  const [reference, setReference] = useState('');
   const successMessage = useRef<HTMLDivElement>(null);
   const sending = status === 'sending';
   const body = `Hi Share The Care!\n\nI'd like to ask about a donation pickup.\n\nName: ${details.name.trim()}\nEmail: ${details.email.trim()}\nNeighborhood: ${details.neighborhood.trim()}\nPickup address: ${details.address.trim()}\nItems: ${details.items.trim()}\n\nCould you let me know about upcoming pickups and how to prepare my donation?\n\nThank you!`;
-  const mailto = `mailto:anishkoppula@gmail.com?subject=${encodeURIComponent(`Pickup request — ${details.neighborhood.trim() || 'San Ramon'}`)}&body=${encodeURIComponent(body)}`;
+  const mailto = `mailto:${organizationEmail}?subject=${encodeURIComponent(`Pickup request — ${details.neighborhood.trim() || 'San Ramon'}`)}&body=${encodeURIComponent(body)}`;
 
   useEffect(() => {
     if (open && status === 'success') successMessage.current?.focus();
@@ -30,7 +34,7 @@ export function PickupDialog({ open, onOpenChange, onReturnFocus }: { open: bool
     if (inFlight.current) return;
     const form = event.currentTarget;
     const fields = Object.keys(details) as Field[];
-    const invalid = fields.filter(field => !details[field].trim() || !(form.elements.namedItem(field) as HTMLInputElement | HTMLTextAreaElement).validity.valid);
+    const invalid = fields.filter(field => !details[field].trim() || !(form.elements.namedItem(field) as HTMLInputElement | HTMLTextAreaElement).validity.valid || (field === 'email' && !isValidPickupEmail(details.email)));
     setErrors(invalid);
     if (invalid.length) {
       (form.elements.namedItem(invalid[0]) as HTMLElement).focus();
@@ -40,25 +44,23 @@ export function PickupDialog({ open, onOpenChange, onReturnFocus }: { open: bool
     inFlight.current = true;
     setStatus('sending');
     try {
-      const response = await fetch('https://formsubmit.co/ajax/anishkoppula@gmail.com', {
+      submissionId.current ??= crypto.randomUUID();
+      const response = await fetch('/api/pickup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         signal: AbortSignal.timeout(20_000),
         body: JSON.stringify({
           ...Object.fromEntries(fields.map(field => [field, details[field].trim()])),
-          _replyto: details.email.trim(),
-          _subject: `Pickup request — ${details.neighborhood.trim()}`,
-          _template: 'table',
-          _honey: new FormData(form).get('_honey') || '',
-          _url: `${window.location.origin}${window.location.pathname}`,
+          submissionId: submissionId.current,
+          website: new FormData(form).get('website') || '',
         }),
       });
       const result = await response.json();
-      // FormSubmit can return HTTP 200 and the string "false" for a rejected request.
-      const needsActivation = typeof result?.message === 'string' && /activat|actived|confirmation email/i.test(result.message);
-      if (!response.ok || (result?.success !== true && result?.success !== 'true') || needsActivation) {
+      if (!response.ok || result?.success !== true || typeof result?.reference !== 'string' || !/^STC-[A-F0-9]{12}$/.test(result.reference)) {
         throw new Error('Pickup request was not accepted');
       }
+      setReference(result.reference);
+      submissionId.current = null;
       setDetails(emptyDetails);
       setStatus('success');
     } catch {
@@ -82,6 +84,7 @@ export function PickupDialog({ open, onOpenChange, onReturnFocus }: { open: bool
             <div className="inquiry-success" role="status" tabIndex={-1} ref={successMessage}>
               <CheckCircle2 size={27} aria-hidden="true" />
               <h3>Request submitted. Thank you!</h3>
+              <p>Your reference: <strong>{reference}</strong></p>
               <p>Our team will email you to arrange your pickup. Your pickup date and time still need to be confirmed.</p>
             </div>
             <button type="button" className="button button-orange inquiry-submit" onClick={() => setStatus('idle')}>Send another request <ArrowUpRight size={18} /></button>
@@ -95,14 +98,14 @@ export function PickupDialog({ open, onOpenChange, onReturnFocus }: { open: bool
               <label>Your neighborhood<input name="neighborhood" autoComplete="address-level3" value={details.neighborhood} onChange={e => updateField('neighborhood', e.target.value)} placeholder="e.g. The Bridges, San Ramon" maxLength={150} aria-invalid={errors.includes('neighborhood')} aria-describedby={errors.includes('neighborhood') ? 'pickup-field-error' : undefined} required /></label>
               <label>Pickup address<input name="address" autoComplete="street-address" value={details.address} onChange={e => updateField('address', e.target.value)} placeholder="Street address, city, and ZIP code" maxLength={300} aria-invalid={errors.includes('address')} aria-describedby={errors.includes('address') ? 'pickup-field-error' : undefined} required /></label>
               <label>What would you like to give?<textarea name="items" value={details.items} onChange={e => updateField('items', e.target.value)} placeholder="Clothing, shelf-stable food, unopened hygiene products, baby essentials, or a question…" maxLength={5000} aria-invalid={errors.includes('items')} aria-describedby={errors.includes('items') ? 'pickup-field-error' : undefined} rows={3} required /></label>
-              <input className="inquiry-honey" type="text" name="_honey" tabIndex={-1} autoComplete="off" aria-hidden="true" />
+              <input className="inquiry-honey" type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" />
             </fieldset>
             {errors.length > 0 && <p className="field-error" id="pickup-field-error" role="alert">Please add your name, a valid email, neighborhood, pickup address, and donation details.</p>}
-            {status === 'error' && <p className="field-error" role="alert">We couldn’t confirm your request was sent. Your details are still here. Please try again, <a href={mailto}>Email our team</a>, or call us below.</p>}
+            {status === 'error' && <p className="field-error" role="alert">We couldn’t confirm your request was saved. Your details are still here. Please try again, <a href={mailto}>Email our team</a>, or call us below.</p>}
             <button type="submit" className="button button-orange inquiry-submit" disabled={sending}>
               <Mail size={17} /> {sending ? 'Sending…' : 'Send pickup request'} <ArrowUpRight size={18} />
             </button>
-            <p className="dialog-privacy">Your details are emailed to Share The Care via <a href="https://formsubmit.co/privacy.pdf" target="_blank" rel="noreferrer">FormSubmit</a> to coordinate your donation.</p>
+            <p className="dialog-privacy">Your details are stored in our private pickup tracker and used to coordinate your donation.</p>
           </form>
         )}
         <p className="dialog-footnote">A pickup is arranged directly with our team. Prefer to call? <a href="tel:+16506806214">(650) 680-6214</a></p>

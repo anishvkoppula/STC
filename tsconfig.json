@@ -8,5 +8,5 @@
     "paths": {"@/*": ["./*"]},
     "types": ["vite/client", "vitest/globals", "@testing-library/jest-dom"]
   },
-  "include": ["src", "components", "lib", "tests", "vite.config.ts"]
+  "include": ["src", "components", "lib", "server", "api", "tests", "vite.config.ts"]
 }

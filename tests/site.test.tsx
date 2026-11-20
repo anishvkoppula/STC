@@ -64,7 +64,7 @@ describe('Share The Care visitor experience', () => {
     expect(screen.getAllByText('Vice President')).toHaveLength(2);
     expect(screen.getByText('Director of Outreach & Development')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: '(650) 680-6214' })).toHaveAttribute('href', 'tel:+16506806214');
-    expect(screen.getByRole('link', { name: 'anishkoppula@gmail.com' })).toHaveAttribute('href', 'mailto:anishkoppula@gmail.com');
+    expect(screen.getByRole('link', { name: 'srsharethecare@gmail.com' })).toHaveAttribute('href', 'mailto:srsharethecare@gmail.com');
     expect(screen.getAllByText('June 24, 2025')).toHaveLength(2);
   });
 
