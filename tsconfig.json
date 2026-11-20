@@ -6,7 +6,7 @@
     "allowImportingTsExtensions": true, "resolveJsonModule": true,
     "esModuleInterop": true, "allowSyntheticDefaultImports": true,
     "paths": {"@/*": ["./*"]},
-    "types": ["vite/client", "vitest/globals", "@testing-library/jest-dom"]
+    "types": ["node"]
   },
   "include": ["src", "components", "lib", "server", "api", "tests", "vite.config.ts"]
 }
